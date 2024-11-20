@@ -1,26 +1,87 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Web Page</title>
+    <title>LIFF 個人資料</title>
+    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            padding: 50px;
+            margin: 20px;
         }
-        h1 {
-            color: #4CAF50;
+        .profile {
+            margin-top: 20px;
         }
-        p {
-            font-size: 1.2em;
+        img {
+            border-radius: 50%;
         }
     </style>
 </head>
 <body>
-    <h1>Welcome to My Web Page</h1>
-    <p>This is a simple webpage created using VSCode.</p>
-    <a href="https://www.google.com" target="_blank">Visit Google</a>
+    <h1>歡迎使用 LIFF 應用</h1>
+    <button id="loginButton">登入 LINE</button>
+    <button id="logoutButton" style="display: none;">登出</button>
+    <div class="profile" style="display: none;">
+        <h2>個人資料</h2>
+        <img id="profilePicture" src="" alt="Profile Picture" width="100">
+        <p>名稱：<span id="displayName"></span></p>
+        <p>狀態訊息：<span id="statusMessage"></span></p>
+        <p>用戶 ID：<span id="userId"></span></p>
+    </div>
+
+    <script>
+        // 初始化 LIFF 應用
+        async function initializeLiff() {
+            try {
+                await liff.init({ liffId: '2006588924-Yaa5pQoM' }); // 替換為你的 LIFF ID
+                console.log('LIFF 初始化成功');
+                checkLoginStatus();
+            } catch (error) {
+                console.error('LIFF 初始化失敗', error);
+            }
+        }
+
+        // 檢查登入狀態
+        function checkLoginStatus() {
+            if (liff.isLoggedIn()) {
+                displayProfile();
+                document.getElementById('loginButton').style.display = 'none';
+                document.getElementById('logoutButton').style.display = 'block';
+            } else {
+                document.getElementById('loginButton').style.display = 'block';
+                document.getElementById('logoutButton').style.display = 'none';
+            }
+        }
+
+        // 顯示個人資料
+        async function displayProfile() {
+            try {
+                const profile = await liff.getProfile();
+                document.getElementById('profilePicture').src = profile.pictureUrl;
+                document.getElementById('displayName').textContent = profile.displayName;
+                document.getElementById('statusMessage').textContent = profile.statusMessage || '無狀態訊息';
+                document.getElementById('userId').textContent = profile.userId; // 新增顯示用戶 ID
+                document.querySelector('.profile').style.display = 'block';
+            } catch (error) {
+                console.error('取得個人資料失敗', error);
+            }
+        }
+
+        // 登入 LINE
+        document.getElementById('loginButton').addEventListener('click', () => {
+            liff.login();
+        });
+
+        // 登出 LINE
+        document.getElementById('logoutButton').addEventListener('click', () => {
+            liff.logout();
+            window.location.reload();
+        });
+
+        // 初始化
+        initializeLiff();
+    </script>
 </body>
 </html>
