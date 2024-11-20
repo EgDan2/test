@@ -9,5 +9,5 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // 啟動伺服器
 app.listen(port, () => {
-  console.log('Server is running on http://localhost:${port}');
+  console.log(`Server is running on http://localhost:${port}`);
 });
