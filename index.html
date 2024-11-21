@@ -59,6 +59,7 @@
         async function displayProfile() {
             try {
                 const profile = await liff.getProfile();
+                console.log(profile);
                 document.getElementById('profilePicture').src = profile.pictureUrl;
                 document.getElementById('displayName').textContent = profile.displayName;
                 document.getElementById('statusMessage').textContent = profile.statusMessage || '無狀態訊息';
